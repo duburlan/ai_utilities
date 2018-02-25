@@ -64,7 +64,7 @@ def get_urls_bing(driver, searchtext):
 
 def get_urls_google(driver, searchtext, num_images):
     scrolls = 1 + int(num_images / 400)
-    request = f'https://www.google.co.in/search?q={searchtext}&source=lnms&tbm=isch'
+    request = f'https://www.google.co.in/search?q={searchtext}&source=lnms&tbm=isch&gl=us'
     driver.get(request)
     # Find Button: "See More Images"
     print("Loading page...")
