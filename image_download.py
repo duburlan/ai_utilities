@@ -28,18 +28,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import Firefox
 from selenium.webdriver.firefox.options import Options
 
-parser = argparse.ArgumentParser(description = "Select, search, download and save a specified number images using a choice of search engines")
-parser.add_argument("searchtext", help="Search Image")
-parser.add_argument("num_images", help="Number of Images", type=int)
-parser.add_argument("--gui", "-g", help="Use Browser in the GUI", action='store_true')
-parser.add_argument("--engine", "-e", help="Search Engine, default=google", choices=['google', 'bing'], default='google')
-args = parser.parse_args()
-
-searchtext = args.searchtext
-label = searchtext.replace(" ", "_")
-num_images = args.num_images
-gui = args.gui
-engine = args.engine
 
 ############################################################################################
 # Customized for specific search engine. Additional search engines can be added, provided
@@ -74,13 +62,13 @@ def get_urls_bing(driver, searchtext):
     xpaths = driver.find_elements_by_xpath('//a[@class="iusc"]')
     return [make_url(xpath) for xpath in xpaths]
 
-def get_urls_google(driver, searchtext):
+def get_urls_google(driver, searchtext, num_images):
     scrolls = 1 + int(num_images / 400)
     request = f'https://www.google.co.in/search?q={searchtext}&source=lnms&tbm=isch'
     driver.get(request)
     # Find Button: "See More Images"
     print("Loading page...")
-    for i in range(5):
+    for i in range(20):
         for j in range(10):
             driver.execute_script("window.scrollBy(0, 10000)")
             time.sleep(0.2)
@@ -99,7 +87,7 @@ def get_urls_google(driver, searchtext):
 ############################################################################################
 # Boilerplate. No need to modify with addition of additinal search engines.
 #############################################################################################
-def make_driver():
+def make_driver(gui):
     if gui:
         driver = webdriver.Firefox()
     else:
@@ -144,17 +132,31 @@ def get_and_save_images(urls, label):
 # __Main Script__
 # Minor modifications required for additonal search engines.
 ############################################################################################
-driver = make_driver()
-print(f'Using: {engine}')
-if engine == 'google':
-    urls = get_urls_google(driver,searchtext)
-elif engine == 'bing':
-    urls = get_urls_bing(driver,searchtext)
-else:
-    print('MAYDAY')
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description = "Select, search, download and save a specified number images using a choice of search engines")
+    parser.add_argument("searchtext", help="Search Image")
+    parser.add_argument("num_images", help="Number of Images", type=int)
+    parser.add_argument("--gui", "-g", help="Use Browser in the GUI", action='store_true')
+    parser.add_argument("--engine", "-e", help="Search Engine, default=google", choices=['google', 'bing'], default='google')
+    args = parser.parse_args()
     
-print (f'Found {len(urls)} images')
-get_and_save_images(urls, label)
-driver.quit()
+    searchtext = args.searchtext
+    label = searchtext.replace(" ", "_")
+    num_images = args.num_images
+    gui = args.gui
+    engine = args.engine
+
+    driver = make_driver(gui)
+    print(f'Using: {engine}')
+    if engine == 'google':
+        urls = get_urls_google(driver,searchtext,num_images)
+    elif engine == 'bing':
+        urls = get_urls_bing(driver,searchtext)
+    else:
+        print('MAYDAY')
+        
+    print (f'Found {len(urls)} images')
+    get_and_save_images(urls, label)
+    driver.quit()
 
 
