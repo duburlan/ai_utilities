@@ -29,12 +29,11 @@ optional arguments:
 
 Example: `image_download.py 'dog' 200 --engine 'bing' --gui` 
 
-Notes:
-1) Requires `Python >= 3`
-2) Install selenium: `conda install selenium`  or  `pip install selenium`
-3) Install other dependencies from conda
-3) Install an appropriate browser and browser driver (appropriate for your browser and operating system) in PATH.
-4) For example, if using Ubuntu and Firefox:
+Installation:
+- `virtualenv -p python3.6 env`
+- `source env/bin/activate`
+- `pip install -r requirements.txt`
+- Install an appropriate browser and browser driver (appropriate for your browser and operating system) in PATH. For example, if using Ubuntu and Firefox:
 - `tar xfvz geckodriver-v0.19.1-linux64.tar.gz` 
 - `mv geckodriver ~/bin/`, where `~/bin` is a dir in PATH
 
