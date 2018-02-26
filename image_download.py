@@ -112,7 +112,7 @@ def get_and_save_images(urls, label):
     num_downloaded = 0
     for (i, image) in enumerate(urls, 1):
         try:
-            req = requests.get(image, stream=True, headers=headers)
+            req = requests.get(image, stream=True, headers=headers, timeout=1)
             if req.status_code == 200:
                 with open(check_suffix(label_dir / str(num_downloaded)), "wb") as fname:
                     req.raw.decode_content = True
